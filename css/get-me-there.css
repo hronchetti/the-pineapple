@@ -1,0 +1,73 @@
+/*=================================
+INTRODUCTION
+===================================
+Description: CSS for Google Maps Integration for the 'Get me there' functionality
+Author: Harry Ronchetti (Minos Media)
+Initial styling: Phone
+Version: 1.0
+Default naming convention: BE
+===================================
+MAIN CONTENT
+=================================*/
+.get-me-there{
+    padding: 0 0 60px 0;
+}
+#map{
+    height: 300px;
+    width: 100%;
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+.directions{
+    width: 100%;
+    padding: 15px 0 0 0;
+}
+.directions__address{
+    margin: 15px 0 30px 0;
+}
+.directions__landmark{
+    cursor: pointer;
+    display: block;
+    color: #BA2D0B;
+    text-decoration: underline;
+    padding: 5px 0;
+    margin: 0 0 3px 0;
+}
+.directions__landmark:hover{
+    text-decoration: none;
+}
+.directions__landmark--clicked{
+    cursor: pointer;
+    display: block;
+    color: #fff;
+    padding: 5px 10px;
+    background-color: #BA2D0B;
+    border-radius: 5px;
+}
+.directions__landmark--clear{
+    color: #fff;
+    float: right;
+    margin: 4px 0 0 0!important;
+}
+/*==============================DESKTOP==============================*/
+@media all and (min-device-width: 1024px) and (min-width: 1024px) {
+    .get-me-there{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .get-me-there__item:nth-of-type(2){
+        order: 1;
+    }
+    .get-me-there__item:nth-of-type(1){
+        order: 2;
+    }
+    #map{
+        height: 400px;
+        width: calc(((100% - 60px) / 1.5) + 30px);
+    }
+    .directions{
+        width: calc((100% - 60px) / 3);
+        padding: 0;
+    }
+}

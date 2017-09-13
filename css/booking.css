@@ -1,0 +1,17 @@
+/*=================================
+INTRODUCTION
+===================================
+Description: Style for a completed booking from The Pineapple website
+Author: Harry Ronchetti (Minos Media)
+Initial styling: Phone
+Version: 1.0
+Default naming convention: BEM
+*/
+#booking{
+    margin: calc(60px + 3em) auto;
+}
+#tick{
+    color: #2B9720;
+    font-size: 60px;
+    margin: 0;
+}
