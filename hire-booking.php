@@ -1,13 +1,13 @@
 <?php
-/*==================================================================
-ERROR CHECKING
-==================================================================*/
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-/*==================================================================
-PULLING FORM ENTRIES
-==================================================================*/
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+/* PULLING FORM ENTRIES */
+
 $name = isset($_REQUEST['name']) ? $_REQUEST['name'] : null;
 $eventDate = isset($_REQUEST['event-date']) ? $_REQUEST['event-date'] : null;
 $eventType = isset($_REQUEST['event-type']) ? $_REQUEST['event-type'] : null;
@@ -15,9 +15,9 @@ $phone = isset($_REQUEST['phone']) ? $_REQUEST['phone'] : null;
 $attendance = isset($_REQUEST['attendance']) ? $_REQUEST['attendance'] : null;
 $email = isset($_REQUEST['email']) ? $_REQUEST['email'] : null;
 $message = isset($_REQUEST['extra-message']) ? $_REQUEST['extra-message'] : null;
-/*==================================================================
-VALIDATING & SANITIZING FORM ENTRIES
-==================================================================*/
+
+/* VALIDATING & SANITIZING FORM ENTRIES */
+
 $name = filter_var($name, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 $name = filter_var($name, FILTER_SANITIZE_SPECIAL_CHARS);
 $eventDate = filter_var($eventDate, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
@@ -32,36 +32,33 @@ $email = filter_var($email, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES
 $email = filter_var($email, FILTER_SANITIZE_SPECIAL_CHARS);
 $message = filter_var($message, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 $message = filter_var($message, FILTER_SANITIZE_SPECIAL_CHARS);
-/*==================================================================
-EMAIL TO SEND
-==================================================================*/
+// Load Composer's autoloader
+require_once('php/vendor/autoload.php');
+/* EMAIL TO SEND */
 require_once('php/email.php');
-/*==================================================================
-SENDING EMAIL
-==================================================================*/
-require 'php/PHPMailer/PHPMailerAutoload.php';
-$mail = new PHPMailer;
-$mail->isSMTP();                                            // Set mailer to use SMTP
-$mail->Host = 'smtp.livemail.co.uk';                        // Specify main and backup SMTP servers
-$mail->SMTPAuth = true;                                     // Enable SMTP authentication
-$mail->Username = 'bookings@thepineapple.pub';              // SMTP username
-$mail->Password = 'Pineapple1';                             // SMTP password
-$mail->Port = 587;                                          // TCP port to connect to
-$mail->setFrom('bookings@thepineapple.pub', $name);         // From address
-$mail->addAddress('emma@thepineapple.pub');                 // Add a recipient
-$mail->addReplyTo($email, $name);
-$mail->isHTML(true);                                        // Set email format to HTML
-$mail->Subject = 'NEW BOOKING: The Pineapple Website';
-$mail->Body    = $emailContent;
+// Instantiation and passing `true` enables exceptions
+$mail = new PHPMailer(true);
 
-if(!$mail->send()) {
-    echo 'Message could not be sent.';
-    echo 'Mailer Error: ' . $mail->ErrorInfo;
-} else {
-/*==================================================================
-PRINTING TO PAGE
-==================================================================*/
-$pageContent = <<<EOT
+try {
+    //Server settings
+    $mail->SMTPDebug = 2;                                       // Enable verbose debug output
+    $mail->SMTPSecure = 'ssl';                                  // Enable TLS encryption, `ssl` also accepted
+    $mail->isSMTP();                                            // Set mailer to use SMTP
+    $mail->Host = 'smtp.livemail.co.uk';                        // Specify main and backup SMTP servers
+    //$mail->SMTPAuth = true;                                     // Enable SMTP authentication
+    $mail->Username = 'bookings@thepineapple.pub';              // SMTP username
+    $mail->Password = 'Pineapple1!';                             // SMTP password
+    $mail->Port = 465;                                          // TCP port to connect to
+    $mail->setFrom('bookings@thepineapple.pub', $name);         // From address
+    $mail->addAddress('emma@thepineapple.pub');                 // Add a recipient
+    $mail->addReplyTo($email, $name);
+    $mail->isHTML(true);                                        // Set email format to HTML
+    $mail->Subject = 'NEW BOOKING: The Pineapple Website';
+    $mail->Body    = $emailContent;                                
+    $mail->send();
+
+    $pageContent = <<<EOT
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -176,6 +173,8 @@ $pageContent = <<<EOT
 </html>
 
 EOT;
-echo ($pageContent);
+
+    echo ($pageContent);
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
 }
-?>
