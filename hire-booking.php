@@ -41,16 +41,16 @@ $mail = new PHPMailer(true);
 
 try {
     //Server settings
-    $mail->SMTPDebug = 2;                                       // Enable verbose debug output
+    //$mail->SMTPDebug = 2;                                       // Enable verbose debug output
     $mail->SMTPSecure = 'ssl';                                  // Enable TLS encryption, `ssl` also accepted
     $mail->isSMTP();                                            // Set mailer to use SMTP
     $mail->Host = 'smtp.livemail.co.uk';                        // Specify main and backup SMTP servers
-    //$mail->SMTPAuth = true;                                     // Enable SMTP authentication
+    $mail->SMTPAuth = true;                                     // Enable SMTP authentication
     $mail->Username = 'bookings@thepineapple.pub';              // SMTP username
     $mail->Password = 'Pineapple1!';                             // SMTP password
     $mail->Port = 465;                                          // TCP port to connect to
     $mail->setFrom('bookings@thepineapple.pub', $name);         // From address
-    $mail->addAddress('emma@thepineapple.pub');                 // Add a recipient
+    $mail->addAddress('emma@thepineapple.pub');                  
     $mail->addReplyTo($email, $name);
     $mail->isHTML(true);                                        // Set email format to HTML
     $mail->Subject = 'NEW BOOKING: The Pineapple Website';
